@@ -3,7 +3,7 @@
 This code implements a very simple "biometric" authentication system using the
 fuzzy vault algorithm as described by Juels and Sudan in 
 [*A Fuzzy Vault Scheme*](http://people.csail.mit.edu/madhu/papers/2002/ari-journ.pdf). 
-I have made some notable simplifications (in fuzzy_vault.py):
+I have made some notable simplifications (in `fuzzy_vault.py`):
 
 1. The "biometric" data is represented as a list of 
 ten floats. Real fingerprint data is more complex.

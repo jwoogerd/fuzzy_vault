@@ -7,9 +7,12 @@
 # secret key with a biometric data. The vault can be
 # unlocked if presented with a similar enough template.
 
+# to run: python fuzzy_vault.py (writes to vault file vault.py)
+
 
 from random import (uniform, shuffle)
-import numpy
+from numpy import polyfit
+import real
 
 degree = 4 # degree 4 polynomial
 t = 10     # number of features in each template
@@ -54,9 +57,11 @@ def lock(secret, template):
 
     #add chaff points
     max_x = max(template)
+    max_y = max([y for [x, y] in vault])
+
     for i in range(t, r):
         x_i = uniform(0, max_x * 1.1)
-        y_i = uniform(0, p_x(max_x, coeffs) * 1.1)
+        y_i = uniform(0, max_y * 1.1)
         vault.append([x_i, y_i])
     shuffle(vault)
     return vault
@@ -75,7 +80,7 @@ def unlock(template, vault):
 
     Q = zip(*[project(point) for point in template if project(point) != None])
     try:
-        return numpy.polyfit(Q[0], Q[1], deg=degree)
+        return polyfit(Q[0], Q[1], deg=degree)
     except IndexError:
         return None
 
@@ -90,3 +95,14 @@ def decode(coeffs):
             s += str(unichr(num % 100)).lower()
             num /= 100
     return s
+
+def main():
+    with open ('vaults.py', 'w+') as f:
+        f.write('vaults = [')
+        for p in real.people: 
+            f.write(str(lock(p, real.people[p])))
+            f.write(',')
+        f.write(']')
+
+if __name__ == '__main__':
+    main()
